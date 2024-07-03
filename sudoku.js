@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     input.type = 'text';
                     input.maxLength = 1;
                     input.pattern = '[1-9]';
+                    input.inputMode = 'numeric';
                     input.dataset.row = i;
                     input.dataset.col = j;
                     input.addEventListener('input', () => handleInput(input, i, j));
