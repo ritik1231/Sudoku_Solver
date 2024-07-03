@@ -63,7 +63,8 @@ input {
     background-color: #ddd;
 }
 .incorrect {
-    background-color: red;
+    background-color: rgba(255, 60, 0, 0.95);
+    color: white;
 }
 button {
     margin: 10px;
