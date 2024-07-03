@@ -62,7 +62,9 @@ input {
 .pre-filled {
     background-color: #ddd;
 }
-
+.incorrect {
+    background-color: red;
+}
 button {
     margin: 10px;
     padding: 10px 20px;

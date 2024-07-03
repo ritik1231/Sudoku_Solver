@@ -3,8 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const difficulty = urlParams.get('difficulty');
     let board = Array.from({ length: 9 }, () => Array(9).fill('.'));
     let solutionBoard = JSON.parse(JSON.stringify(board));
+    let userBoard = Array.from({ length: 9 }, () => Array(9).fill('.'));
     let timerInterval;
     let startTime;
+    let showingSolution = false;
 
     function possible(board, i, j, val) {
         for (let k = 0; k < 9; k++) {
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         removeCellsBasedOnDifficulty();
         solutionBoard = JSON.parse(JSON.stringify(board));
         solve(solutionBoard);
-        updateBoard();
+        updateBoards();
         startTimer();
     }
 
@@ -96,24 +98,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showSolution() {
-        board = JSON.parse(JSON.stringify(solutionBoard));
-        updateBoard();
-        clearInterval(timerInterval);
+    function toggleSolution() {
+        const sudokuBoard = document.getElementById('sudoku-board');
+        const solutionBoardElement = document.getElementById('solution-board');
+        const button = document.getElementById('show-solution');
+
+        if (showingSolution) {
+            sudokuBoard.style.display = '';
+            solutionBoardElement.style.display = 'none';
+            button.textContent = 'Show Solution';
+        } else {
+            sudokuBoard.style.display = 'none';
+            solutionBoardElement.style.display = '';
+            button.textContent = 'Hide  Solution';
+        }
+        showingSolution = !showingSolution;
     }
 
     function goToHome() {
         window.location.href = 'home.html';
     }
 
-    function updateBoard() {
-        const table = document.getElementById('sudoku-board');
+    function updateBoards() {
+        updateBoard('sudoku-board', board, userBoard);
+        updateBoard('solution-board', solutionBoard, solutionBoard, true);
+    }
+
+    function updateBoard(boardId, currentBoard, userBoard, isSolution = false) {
+        const table = document.getElementById(boardId);
         table.innerHTML = '';
         for (let i = 0; i < 9; i++) {
             const row = table.insertRow();
             for (let j = 0; j < 9; j++) {
                 const cell = row.insertCell();
-                if (board[i][j] == '.') {
+                if (currentBoard[i][j] == '.') {
                     const input = document.createElement('input');
                     input.type = 'text';
                     input.maxLength = 1;
@@ -121,11 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     input.inputMode = 'numeric';
                     input.dataset.row = i;
                     input.dataset.col = j;
-                    input.addEventListener('input', () => handleInput(input, i, j));
-                    input.addEventListener('keypress', (event) => restrictInput(event));
+                    if (!isSolution) {
+                        input.value = userBoard[i][j] !== '.' ? userBoard[i][j] : ''; // Restore user input
+                        input.addEventListener('input', () => handleInput(input, i, j));
+                        input.addEventListener('keypress', (event) => restrictInput(event));
+                    }
                     cell.appendChild(input);
                 } else {
-                    cell.textContent = board[i][j];
+                    cell.textContent = currentBoard[i][j];
                     cell.classList.add('pre-filled');
                 }
             }
@@ -136,13 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const value = input.value;
         if (value === '') {
             input.classList.remove('incorrect');
-            board[i][j] = '.'; // Clear the board cell
+            userBoard[i][j] = '.'; // Clear the user board cell
         } else if (/^[1-9]$/.test(value) && possibleForUser(board, i, j, value)) {
             input.classList.remove('incorrect');
-            board[i][j] = value; // Update the board with the new value
+            userBoard[i][j] = value; // Update the user board with the new value
         } else {
             input.classList.add('incorrect');
-            board[i][j] = value; // Even if the value is incorrect, we update the board for further checks
+            userBoard[i][j] = value; // Even if the value is incorrect, we update the user board for further checks
         }
         if (checkWin()) {
             showPopup();
@@ -163,52 +184,71 @@ document.addEventListener('DOMContentLoaded', () => {
         let row = Math.floor(i / 3) * 3;
         for (let k = 0; k < 3; k++) {
             for (let l = 0; l < 3; l++) {
-                if ((board[k + row][l + col] == val) && (k + row!= i || l + col != j)) return false;
+                if ((board[k + row][l + col] == val) && (k + row != i || l + col != j)) return false;
             }
+        }
+        return true;
+    }
+
+    function checkWin() {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (userBoard[i][j] === '.' || !possibleForUser(userBoard, i, j, userBoard[i][j])) return false;
             }
-            return true;
-            }
-            function checkWin() {
-                for (let i = 0; i < 9; i++) {
-                    for (let j = 0; j < 9; j++) {
-                        if (board[i][j] === '.' || !possibleForUser(board, i, j, board[i][j])) return false;
-                    }
+        }
+        return true;
+    }
+
+    function showPopup() {
+        clearInterval(timerInterval);
+        const timeUsed = document.getElementById('timer').textContent;
+        document.getElementById('popup-message').textContent = `You won!  ${timeUsed}`;
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('popup').style.display = 'block';
+    }
+
+    function closePopup() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
+    }
+
+    function clearBoard() {
+        board = Array.from({ length: 9 }, () => Array(9).fill('.'));
+        userBoard = Array.from({ length: 9 }, () => Array(9).fill('.'));
+    }
+
+    function startTimer() {
+        startTime = new Date().getTime();
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        const elapsedTime = Math.floor((now - startTime) / 1000);
+        const minutes = String(Math.floor(elapsedTime / 60)).padStart(2, '0');
+        const seconds = String(elapsedTime % 60).padStart(2, '0');
+        document.getElementById('timer').textContent = `Time: ${minutes}:${seconds}`;
+    }
+    function resetGame() {
+        clearUserInputs();
+    }
+    
+    function clearUserInputs() {
+        const table = document.getElementById('sudoku-board');
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const cell = table.rows[i].cells[j];
+                if (!cell.classList.contains('pre-filled')) {
+                    const input = cell.querySelector('input');
+                    input.value = '';
+                    input.classList.remove('incorrect');
+                    board[i][j] = '.';
                 }
-                return true;
             }
-            
-            function showPopup() {
-                clearInterval(timerInterval);
-                const timeUsed = document.getElementById('timer').textContent;
-                document.getElementById('popup-message').textContent = `You win!  ${timeUsed}`;
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('popup').style.display = 'block';
-            }
-            
-            function closePopup() {
-                document.getElementById('overlay').style.display = 'none';
-                document.getElementById('popup').style.display = 'none';
-            }
-            
-            function clearBoard() {
-                board = Array.from({ length: 9 }, () => Array(9).fill('.'));
-            }
-            
-            function startTimer() {
-                startTime = new Date().getTime();
-                timerInterval = setInterval(updateTimer, 1000);
-            }
-            
-            function updateTimer() {
-                const now = new Date().getTime();
-                const elapsedTime = Math.floor((now - startTime) / 1000);
-                const minutes = String(Math.floor(elapsedTime / 60)).padStart(2, '0');
-                const seconds = String(elapsedTime % 60).padStart(2, '0');
-                document.getElementById('timer').textContent = `Time: ${minutes}:${seconds}`;
-            }
-            
-            document.getElementById('show-solution').onclick = showSolution;
-            document.getElementById('go-to-home').onclick = goToHome;
-            
-            generateSudoku();
+        }
+    }
+    document.getElementById('show-solution').onclick = toggleSolution;
+    document.getElementById('go-to-home').onclick = goToHome;
+    document.getElementById('reset-game').onclick = resetGame;
+    generateSudoku();
 });
