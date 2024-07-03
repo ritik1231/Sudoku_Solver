@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function goToHome() {
-        window.location.href = 'setup.html';
+        window.location.href = 'home.html';
     }
 
     function updateBoard() {
