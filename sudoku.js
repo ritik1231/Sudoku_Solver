@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (value === '') {
             input.classList.remove('incorrect');
             userBoard[i][j] = '.'; // Clear the user board cell
-        } else if (/^[1-9]$/.test(value) && possibleForUser(board, i, j, value)) {
+        } else if (/^[1-9]$/.test(value) && possibleForUser(userBoard, i, j, value)) {
             input.classList.remove('incorrect');
             userBoard[i][j] = value; // Update the user board with the new value
         } else {
