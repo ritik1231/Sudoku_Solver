@@ -48,6 +48,8 @@ button[type="submit"] {
 }
 @media (max-width: 768px) {
     body {
-        background-image: url('images/sudoku_mob.jpg'); 
+        background-image: url('images/sudoku_mob.jpg');
+        background-size: contain;
+        background-position: center;
     }
 }

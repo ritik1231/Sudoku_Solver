@@ -39,6 +39,16 @@ td {
     font-size: 1.2em;
     font-weight: bold;
 }
+/* Specific styling for grid boundaries */
+td:nth-child(3n),
+td:nth-child(6n){
+    border-right: 2px solid #9f9d9d;
+}
+tr:nth-child(3n) td,
+tr:nth-child(6n) td {
+    border-bottom: 2px solid #9f9d9d;
+}
+
 input {
     width: 100%;
     height: 100%;
