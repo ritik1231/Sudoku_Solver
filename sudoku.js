@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sudokuBoard.style.display = 'none';
             solutionBoardElement.style.display = '';
             button.textContent = 'Hide  Solution';
+            startTime -= 300000;
         }
         showingSolution = !showingSolution;
     }
@@ -158,12 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (value === '') {
             input.classList.remove('incorrect');
             userBoard[i][j] = '.'; // Clear the user board cell
-        } else if (/^[1-9]$/.test(value) && possibleForUser(userBoard, i, j, value)) {
+        } else if (/^[1-9]$/.test(value) && possibleForUser(board, i, j, value) && possibleForUser(userBoard, i, j, value) ) {
             input.classList.remove('incorrect');
             userBoard[i][j] = value; // Update the user board with the new value
         } else {
             input.classList.add('incorrect');
             userBoard[i][j] = value; // Even if the value is incorrect, we update the user board for further checks
+            startTime -= 10000;
         }
         if (checkWin()) {
             showPopup();
