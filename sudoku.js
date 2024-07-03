@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             sudokuBoard.style.display = 'none';
             solutionBoardElement.style.display = '';
-            button.textContent = 'Hide  Solution';
+            button.textContent = 'Hide Solution';
             startTime -= 300000;
         }
         showingSolution = !showingSolution;
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (value === '') {
             input.classList.remove('incorrect');
             userBoard[i][j] = '.'; // Clear the user board cell
-        } else if (/^[1-9]$/.test(value) && possibleForUser(board, i, j, value) && possibleForUser(userBoard, i, j, value) ) {
+        } else if (/^[1-9]$/.test(value) && possibleForUser(board, userBoard, i, j, value)) {
             input.classList.remove('incorrect');
             userBoard[i][j] = value; // Update the user board with the new value
         } else {
@@ -178,15 +178,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function possibleForUser(board, i, j, val) {
+    function possibleForUser(board, userBoard, i, j, val) {
         for (let k = 0; k < 9; k++) {
+            if ((userBoard[k][j] == val && k != i) || (userBoard[i][k] == val && k != j)) return false;
             if ((board[k][j] == val && k != i) || (board[i][k] == val && k != j)) return false;
         }
         let col = Math.floor(j / 3) * 3;
         let row = Math.floor(i / 3) * 3;
         for (let k = 0; k < 3; k++) {
             for (let l = 0; l < 3; l++) {
-                if ((board[k + row][l + col] == val) && (k + row != i || l + col != j)) return false;
+                if ((userBoard[k + row][l + col] == val && (k + row != i || l + col != j)) || 
+                    (board[k + row][l + col] == val && (k + row != i || l + col != j))) return false;
             }
         }
         return true;
@@ -195,7 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkWin() {
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
-                if (userBoard[i][j] === '.' || !possibleForUser(userBoard, i, j, userBoard[i][j])) return false;
+                if(board[i][j]==='.'){
+                    if ((userBoard[i][j] === '.') || !possibleForUser(board, userBoard, i, j, userBoard[i][j])) return false;
+                }
             }
         }
         return true;
@@ -204,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showPopup() {
         clearInterval(timerInterval);
         const timeUsed = document.getElementById('timer').textContent;
-        document.getElementById('popup-message').textContent = `You won!  ${timeUsed}`;
+        document.getElementById('popup-message').innerHTML = `You won!<br>${timeUsed}`;
         document.getElementById('overlay').style.display = 'block';
         document.getElementById('popup').style.display = 'block';
     }
@@ -223,14 +227,15 @@ document.addEventListener('DOMContentLoaded', () => {
         startTime = new Date().getTime();
         timerInterval = setInterval(updateTimer, 1000);
     }
-
     function updateTimer() {
         const now = new Date().getTime();
         const elapsedTime = Math.floor((now - startTime) / 1000);
-        const minutes = String(Math.floor(elapsedTime / 60)).padStart(2, '0');
+        const hours = String(Math.floor(elapsedTime / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((elapsedTime % 3600) / 60)).padStart(2, '0');
         const seconds = String(elapsedTime % 60).padStart(2, '0');
-        document.getElementById('timer').textContent = `Time: ${minutes}:${seconds}`;
+        document.getElementById('timer').textContent = `Time: ${hours}:${minutes}:${seconds}`;
     }
+    
     function resetGame() {
         clearUserInputs();
     }
@@ -244,11 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const input = cell.querySelector('input');
                     input.value = '';
                     input.classList.remove('incorrect');
-                    board[i][j] = '.';
+                    userBoard[i][j] = '.'; // Clear the user board cell
                 }
             }
         }
     }
+    
     document.getElementById('show-solution').onclick = toggleSolution;
     document.getElementById('go-to-home').onclick = goToHome;
     document.getElementById('reset-game').onclick = resetGame;
