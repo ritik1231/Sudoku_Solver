@@ -4,61 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudoku Setup</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-            background-image: url('images/sudoku.jpg'); /* Replace with your background image */
-            background-size: cover;
-            background-position: center;
-        }
-       
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.912);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        label, select, button {
-            margin: 10px 0;
-        }
-        select, button {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #d47d35;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        select:hover, button:hover {
-            background-color: #d47d35;
-        }
-        label {
-            margin: 10px 0;
-            font-size: 20px;
-            font-weight: bold; /* Make the label bold */
-            color: #9d7300; /* Adjust the color to be appealing */
-        }
-        button[type="submit"] {
-            width: 150px;
-        }
-        @media (max-width: 768px) {
-            body {
-                background-image: url('sudoku_mob.jpg'); /* Replace with mobile background image */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="setup.css">
 </head>
 <body>
     <form id="setup-form">
