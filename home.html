@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudoku game</title>
+    <title>Sudoku Game</title>
     <link rel="stylesheet" href="home.css">
 </head>
 <body>
@@ -13,9 +13,9 @@
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
-        </select><br><br>
-
+        </select>
         <button type="submit">Start Game</button>
+        <button type="button" id="rules-button">Rules</button>
     </form>
 
     <script>
@@ -23,6 +23,10 @@
             event.preventDefault();
             const difficulty = document.getElementById('difficulty').value;
             window.location.href = `game.html?difficulty=${difficulty}`;
+        });
+
+        document.getElementById('rules-button').addEventListener('click', function() {
+            window.location.href = 'rules.html';
         });
     </script>
 </body>

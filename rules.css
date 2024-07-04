@@ -1,0 +1,80 @@
+body {
+    font-family: 'Great Vibes', cursive;
+    margin: 0;
+    padding: 20px;
+    background: url('images/rules_bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #572e00;
+    text-align: center;
+}
+
+.content {
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.303);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+ol {
+    list-style-type: decimal;
+    margin: 0 auto 20px;
+    padding-left: 40px;
+    text-align: left;
+    font-size: 1.5em;
+}
+
+p {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+label {
+    margin: 10px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #9d7300;
+}
+
+select, button {
+    margin: 10px 0;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #d47d35;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+select:hover, button:hover {
+    background-color: #c26e2e;
+    transform: translateY(-2px);
+}
+
+@media only screen and (max-width: 600px) {
+    h1 {
+        font-size: 2em;
+    }
+    
+    ol {
+        font-size: 1.2em;
+    }
+    
+    p {
+        font-size: 1em;
+    }
+    
+    button {
+        font-size: 1em;
+    }
+}

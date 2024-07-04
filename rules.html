@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Rules</title>
+    <link rel="stylesheet" href="rules.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@1&display=swap">
+</head>
+<body>
+    <div class="content">
+        <h1>Sudoku Rules</h1>
+        <ol>
+            <li>Each row, column and nine 3x3 subgrids must contain the numbers from 1 to 9, without repetitions.</li>
+            <li>If you enter a wrong number(not a possible number for that cell ), a penalty of 10 seconds will be added to your time.</li>
+            <li>Each hint you take will add a penalty of 20 seconds to your time.</li>
+            <li>Every time you view the solution, a penalty of 5 minutes will be added to your time.</li>
+        </ol>
+        <p><strong>Note:</strong> The hint does not guarantee the actual solution. It only provides the best possible move for the current puzzle state.</p>
+        <button onclick="goBack()">Back to Game</button>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+</html>

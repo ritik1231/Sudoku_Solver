@@ -235,11 +235,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const seconds = String(elapsedTime % 60).padStart(2, '0');
         document.getElementById('timer').textContent = `Time: ${hours}:${minutes}:${seconds}`;
     }
-    
+
     function resetGame() {
         clearUserInputs();
     }
-    
+
     function clearUserInputs() {
         const table = document.getElementById('sudoku-board');
         for (let i = 0; i < 9; i++) {
@@ -254,9 +254,69 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    function getHint() {
+        let hintCell = null;
+        let hintValue = '';
     
+        // Try to find a cell with a unique possible value
+        outerLoop:
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (board[i][j] === '.' && userBoard[i][j] === '.') {
+                    let possibleValues = [];
+                    for (let ch = '1'; ch <= '9'; ch++) {
+                        if (possible(board, i, j, ch) && possibleForUser(board, userBoard, i, j, ch)) {
+                            possibleValues.push(ch);
+                        }
+                    }
+                    if (possibleValues.length === 1) {
+                        hintCell = { row: i, col: j };
+                        hintValue = possibleValues[0];
+                        break outerLoop;
+                    }
+                }
+            }
+        }
+    
+        // If no cell with a unique possible value was found, highlight any cell with possible values
+        if (!hintCell) {
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (board[i][j] === '.' && userBoard[i][j] === '.') {
+                        for (let ch = '1'; ch <= '9'; ch++) {
+                            if (possible(board, i, j, ch) && possibleForUser(board, userBoard, i, j, ch)) {
+                                hintCell = { row: i, col: j };
+                                hintValue = ch;
+                                break;
+                            }
+                        }
+                        if (hintCell) break;
+                    }
+                }
+            }
+        }
+    
+        if (hintCell) {
+            const cell = document.querySelector(`input[data-row='${hintCell.row}'][data-col='${hintCell.col}']`);
+            if (cell) {
+                cell.value = hintValue;
+                cell.style.color = 'blue';
+                setTimeout(() => {
+                    cell.value = '';
+                    cell.style.color = 'black';
+                }, 1000);
+                startTime -= 20000;
+            } else {
+                console.error(`Cell not found for row: ${hintCell.row}, col: ${hintCell.col}`);
+            }
+        } else {
+            console.error('No hint cell found');
+        }
+    }
     document.getElementById('show-solution').onclick = toggleSolution;
     document.getElementById('go-to-home').onclick = goToHome;
     document.getElementById('reset-game').onclick = resetGame;
+    document.getElementById('get-hint').onclick = getHint;
     generateSudoku();
 });
