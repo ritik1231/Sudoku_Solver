@@ -7,6 +7,8 @@ Welcome to the Sudoku Game! This is a web-based Sudoku game where players can en
 	•	Sudoku Puzzles: Play Sudoku puzzles with three difficulty levels: Easy, Medium, and Hard.
 	•	Timer: Track your solving time during gameplay.
 	•	Show Solution: Option to reveal the solution for the current puzzle.
+	•	Hint System: Get hints to assist in solving the puzzle.
+	•	Highlight Wrong Inputs: Incorrect entries are highlighted to help you correct mistakes.
 	•	Responsive Design: Enjoy the game on both desktop and mobile devices.
 
 ### Demo
